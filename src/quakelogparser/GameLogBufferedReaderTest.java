@@ -23,7 +23,7 @@ public class GameLogBufferedReaderTest {
 						onoff_log.get(0));
 		assertEquals(	"Second line should be ShutdownGame",
 						" 23:59 ShutdownGame:",
-						onoff_log.get(0));
+						onoff_log.get(1));
 }
 
 }
