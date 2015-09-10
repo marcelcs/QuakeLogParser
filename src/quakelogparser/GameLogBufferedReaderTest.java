@@ -1,9 +1,7 @@
 package quakelogparser;
 
 import static org.junit.Assert.*;
-
 import java.util.List;
-
 import org.junit.Test;
 
 public class GameLogBufferedReaderTest {
@@ -24,6 +22,5 @@ public class GameLogBufferedReaderTest {
 		assertEquals(	"Second line should be ShutdownGame",
 						" 23:59 ShutdownGame:",
 						onoff_log.get(1));
-}
-
+	}
 }
