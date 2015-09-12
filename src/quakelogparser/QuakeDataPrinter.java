@@ -1,15 +1,56 @@
 package quakelogparser;
 
-import java.io.PrintWriter;
+/*
+ * QuakeLogParse - QuakeDataPrinter class
+ * This class is responsible for the output of results
+ */
+
 import java.util.List;
 import java.util.Map;
 
 public class QuakeDataPrinter {
 
+	//Prints the log of means of death, per game
+	public static void printMODData(List<QuakeGame> games) {
+		int counter = 0; // used to track the current game's number
+		int i;
+		int numberOfMODs;
+		String tab = "   "; // used for indentation
+		String line; // used to compose each line that we will print
+		String full = ""; // used to store the complete message that we will print at the end
+		
+		for (QuakeGame game : games) {
+			//composing the first line, "game_X - kills_by_means: {"
+			line = "game_" + (++counter) + " - kills_by_means: {";
+			full+=line;
+
+			//composing list of MoD-Kills pairs
+			numberOfMODs = game.getMODs().size();
+			if (numberOfMODs > 0) {
+				full+="\n";
+			}
+			i = 0;
+			for (Map.Entry<String, Integer> entry : game.getKillsByMODs().entrySet()) {
+				line = tab + '"' + entry.getKey() + '"' + ": " + entry.getValue();
+				if ((++i)<numberOfMODs) {line += ",\n";}
+				full+=line;
+			}
+			
+			//closing MoD-Kills list
+			if (i > 0) {
+				full+="\n" + tab + "}\n";
+			} else {
+				full+=" }\n";
+			}
+		}
+		System.out.println(full);
+	}
+	
+	//Prints the log of player and their scores, per game
 	public static void printGamesData(List<QuakeGame> games) {
 		int counter = 0; // used to track the current game's number
 		int i;
-		int number_of_players;
+		int numberOfPlayers;
 		String tab = "   "; // used for indentation
 		String line; // used to compose each line that we will print
 		String full = ""; // used to store the complete message that we will print at the end
@@ -25,8 +66,8 @@ public class QuakeDataPrinter {
 			
 			//composing the third line, with a list of players
 			line = tab + "players: [";
-			for (String player_name : game.getPlayers()) {
-				line += '"' + player_name + '"' + ',';
+			for (String playerName : game.getPlayers()) {
+				line += '"' + playerName + '"' + ',';
 			}
 			if (game.getPlayers().size()>0) line = line.substring(0, line.length()-1);
 			line += "]\n";
@@ -37,14 +78,14 @@ public class QuakeDataPrinter {
 			full+=line;
 			
 			//composing list of player-score pairs
-			number_of_players = game.getPlayers().size();
-			if (number_of_players > 0) {
+			numberOfPlayers = game.getPlayers().size();
+			if (numberOfPlayers > 0) {
 				full+="\n";
 			}
 			i = 0;
 			for (Map.Entry<String, Integer> entry : game.getKills().entrySet()) {
 				line = tab + tab + '"' + entry.getKey() + '"' + ": " + entry.getValue();
-				if ((++i)<number_of_players) {line += ",\n";}
+				if ((++i)<numberOfPlayers) {line += ",\n";}
 				full+=line;
 			}
 			
@@ -61,6 +102,7 @@ public class QuakeDataPrinter {
 		System.out.println(full);
 	}
 	
+	//Prints the overall rank of players, considering their performance on every game
 	public static void printOverallRank(Map<String, Integer> ranks) {
 		int counter = 0; // used to track the current player's position/number
 		String tab = "   "; // used for indentation

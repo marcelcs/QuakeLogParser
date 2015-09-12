@@ -1,5 +1,10 @@
 package quakelogparser;
 
+/*
+ * QuakeLogParse - Main class
+ * This class renders the application's menu and handles the selected options.
+ */
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -22,6 +27,8 @@ public class Main {
 		System.out.println("'C' for GameLog Parse with a Customized log path");
 		System.out.println("'R' for Player Rank at the Default log location");
 		System.out.println("'P' for Player Rank with a Customized log path");
+		System.out.println("'W' for Means of Death at the Default log location");
+		System.out.println("'M' for Means of Death with a Customized log path");
 		System.out.println("'J' for JUnit tests");
 		System.out.println("'E' to Exit application");
 		
@@ -42,6 +49,14 @@ public class Main {
 			case "c":
 				Main.parser("custom");
 				break;
+			case "W":
+			case "w":
+				Main.weaponize("default");
+				break;
+			case "M":
+			case "m":
+				Main.weaponize("custom");
+				break;
 			case "R":
 			case "r":
 				Main.ranker("default");
@@ -52,7 +67,7 @@ public class Main {
 				break;
 			case "J":
 			case "j":
-				Main.junit_runner();
+				Main.jUnitRunner();
 				break;
 			case "E":
 			case "e":
@@ -76,14 +91,41 @@ public class Main {
 		
 		//First, we load the texts from the .log file into a list of String
 		// (each String is a line from the log)
-		List<String> game_log = GameLogBufferedReader.LogReader(file);		
+		List<String> gameLog = GameLogBufferedReader.LogReader(file);		
 		
 		//Then, we parse the information from the log into a list of QuakeGame objects,
 		// which contains relevant data extracted from the logs for each game
-		List<QuakeGame> games_data = QuakeLogParser.GameKillsLog(game_log);
+		List<QuakeGame> gamesData = QuakeLogParser.GameKillsLog(gameLog);
 		
 		//Finally, we read the data for each game and print it to the console
-		QuakeDataPrinter.printGamesData(games_data);
+		QuakeDataPrinter.printGamesData(gamesData);
+		
+		Main.greet();
+	}
+	
+	private static void weaponize(String mode) {
+		String file = "games.log";
+		
+		if (mode.equals("custom")) {
+			BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+			System.out.println("Please insert the absolute path to your Log file:");
+			try{
+				file = br.readLine();
+	        }catch(IOException e){
+	        	file = "games.log"; //In case of problems, we go to the default file
+	        }
+		}
+		
+		//First, we load the texts from the .log file into a list of String
+		// (each String is a line from the log)
+		List<String> gameLog = GameLogBufferedReader.LogReader(file);		
+		
+		//Then, we parse the information from the log into a list of QuakeGame objects,
+		// which contains relevant data extracted from the logs for each game
+		List<QuakeGame> gamesData = QuakeLogParser.GameKillsLog(gameLog);
+		
+		//Finally, we read the data for each game and print it to the console
+		QuakeDataPrinter.printMODData(gamesData);
 		
 		Main.greet();
 	}
@@ -103,14 +145,14 @@ public class Main {
 		
 		//First, we load the texts from the .log file into a list of String
 		// (each String is a line from the log)
-		List<String> game_log = GameLogBufferedReader.LogReader(file);		
+		List<String> gameLog = GameLogBufferedReader.LogReader(file);		
 		
 		//Then, we parse the information from the log into a list of QuakeGame objects,
 		// which contains relevant data extracted from the logs for each game
-		List<QuakeGame> games_data = QuakeLogParser.GameKillsLog(game_log);
+		List<QuakeGame> gamesData = QuakeLogParser.GameKillsLog(gameLog);
 		
 		//Now, we calculate the Ranks for all players
-		Map<String, Integer> ranks = QuakeLogParser.overallRank(games_data);
+		Map<String, Integer> ranks = QuakeLogParser.overallRank(gamesData);
 		
 		//Finally, we output the calculated Ranks
 		QuakeDataPrinter.printOverallRank(ranks);
@@ -118,7 +160,7 @@ public class Main {
 		Main.greet();
 	}
 	
-	private static void junit_runner() {
+	private static void jUnitRunner() {
 		//First, we setup a JUnit Core object
 		JUnitCore jUnitCore = new JUnitCore();
 		
@@ -133,6 +175,7 @@ public class Main {
 			/// this next part is not being printed
 			System.out.println(result.getFailureCount() + " tests failed out of " + result.getRunCount());
 		}
+		System.out.println();
 		Main.greet();
 	}
 }

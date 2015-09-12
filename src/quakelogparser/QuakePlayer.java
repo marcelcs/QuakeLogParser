@@ -1,18 +1,24 @@
 package quakelogparser;
 
+/*
+ * QuakeLogParse - QuakePlayer class
+ * This is a class of objects that represent a Quake Player and
+ * its respective name and counter for both kills and suicides
+ */
+
 public class QuakePlayer {	
-	private String player_name;
-	private int raw_kills;
-	private int suicides;
+	private String playerName; //the nickname for the player
+	private int rawKills; //number of times this player has killed another player
+	private int suicides; //number of times this player was killed by the environment (NOT by other players)
 
 	public QuakePlayer(String name) {
-		this.player_name = name;
-		this.raw_kills = 0;
+		this.playerName = name;
+		this.rawKills = 0;
 		this.suicides = 0;
 	}
 	
 	public void score() {
-		this.raw_kills++;
+		this.rawKills++;
 	}
 	
 	public void suicide() {
@@ -20,26 +26,27 @@ public class QuakePlayer {
 	}
 	
 	public String getName() {
-		return this.player_name;
+		return this.playerName;
 	}
 	
 	public int getKills() {
-		return this.raw_kills;
+		return this.rawKills;
 	}
 	
 	public int suicideCount() {
 		return this.suicides;
 	}
 	
+	//This is used in JUnit tests, comparing two QuakePlayer objects and telling if they`re equals
 	public boolean equals(Object other){
 		//checking type compatibility
 	    if((other == null) || (getClass() != other.getClass()))return false;
 	    
 	    //validating data equality
-        QuakePlayer other_player = (QuakePlayer)other;
-        if (!player_name.equals(other_player.getName())) return false;
-        if (raw_kills != other_player.getKills()) return false;
-        if (suicides != other_player.suicideCount()) return false;
+        QuakePlayer otherPlayer = (QuakePlayer)other;
+        if (!playerName.equals(otherPlayer.getName())) return false;
+        if (rawKills != otherPlayer.getKills()) return false;
+        if (suicides != otherPlayer.suicideCount()) return false;
         
         //upon meeting requirements, confirm True for this==other
 	    return true;

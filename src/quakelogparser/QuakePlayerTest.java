@@ -1,11 +1,18 @@
 package quakelogparser;
 
+/*
+ * QuakeLogParse - QuakePlayerTest class
+ * This class contains tests for the QuakePlayer object and its methods
+ * The tests consists of creating a QuakePlayer object and using its methods to check the behavior
+ */
+
 import static org.junit.Assert.*;
 
 import org.junit.Test;
 
 public class QuakePlayerTest {
 	
+	//Constructor test: Object creation and initial state
 	@Test
 	public void testQuakePlayer() {
 		QuakePlayer tester = new QuakePlayer("tester");
@@ -20,6 +27,7 @@ public class QuakePlayerTest {
 						0);
 	}
 
+	//Score test: call score() a number of times, verifying the player's kill count
 	@Test
 	public void testScoreAndGetKills() {
 		QuakePlayer tester = new QuakePlayer("tester");
@@ -30,6 +38,7 @@ public class QuakePlayerTest {
 		}
 	}
 
+	//Suicide test: call suicide() a number of times, verifying the object's suicide count
 	@Test
 	public void testSuicideAndSuicideCount() {
 		QuakePlayer tester = new QuakePlayer("tester");	
@@ -40,6 +49,7 @@ public class QuakePlayerTest {
 		}
 	}
 
+	//GetName test: verify the name of the QuakePlayer object
 	@Test
 	public void testGetName() {
 		String name = "Not a name";
