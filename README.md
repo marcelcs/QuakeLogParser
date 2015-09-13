@@ -1,104 +1,48 @@
-# Quake log parser
+Quake Log Parser
 
-## Task 1
+#1 Technology
+The entire application was developed using Java SE and JUnit on Eclipse (Kepler Release)
 
-Construa um parser para o arquivo de log games.log.
+#2 Execution
+There are 2 main ways to run this application
+2.1- You can import the entire project into Eclipse and Run Main.java
+2.2- You can compile via command line:
+		javac -cp .;<absolute_path_to_junit> src/quakelogparser/*.java
+	And then run the application with another command line:
+		java -cp .\src;<absolute_path_to_junit>;<absolute_path_to_hamcrest> quakelogparser.Main
+	Be aware that out of 19 JUnit tests, 3 are failing when you run Main from Console
+	(all tests are working when called from the Eclipse Console)
+Method 2.1 is strongly recommended	
 
-O arquivo games.log é gerado pelo servidor de quake 3 arena. Ele registra todas as informações dos jogos, quando um jogo começa, quando termina, quem matou quem, quem morreu pq caiu no vazio, quem morreu machucado, entre outros.
+#3 Running the Log
+The application works directly in the Console. It presents a number of options,
+ each with the possibility to use a default .log file or specify another, specific file 
+There is a Default games.log file at the root folder, you can replace it if you want.
+To use another .log file without having to replace the default file,
+ it's recommended to have the file's absolute Path in the system's clipboard,
+ so that you may paste it directly in the console when prompted.
+ 
+#4 Features
+There are four main features in the application:
+4.1- game.log Parse, which reads a .log file and outputs the player kills information, per game
+ (with options for Default or Custom files)
+4.2- Player Rank, which reads a .log file and outputs the players global rankings
+ (with options for Default or Custom files)
+4.3- Means of Death, which reads a .log file and outputs MoD kills information, per game
+ (with options for Default or Custom files)
+4.4- JUnit tests, which executes the entire TestSuite at once.(Completely automatic)
 
-O parser deve ser capaz de ler o arquivo, agrupar os dados de cada jogo, e em cada jogo deve coletar as informações de morte.
+#5 Application Architecture
+- Main provides an interface of use, for both input and output.
+The Main class also handles user options input by calling static methods featured in other classes.
+- GameLogBufferedReader provides a static method to read the .log files
+- QuakeDataPrinter provides static methods to handle data output to the Console
+- QuakeLogParser provides static methods to analyze logs and compile organized data
+These static methods work and communicate via instances or collections of objects of specific classes
+- MeanOfDeath objects represent types of damage, and also counts the number of times a player died by it
+- QuakePlayer objects represent each of the participants in a match, and also counts the number of opponents killed and the number of suicides
+- QuakeGame objects stores data from game matches, such as names for each player, their scores, means of death that occurred (and how many times) and total number of kills that occurred
 
-### Exemplo
-
-  	21:42 Kill: 1022 2 22: <world> killed Isgalamido by MOD_TRIGGER_HURT
-  
-  O player "Isgalamido" morreu pois estava ferido e caiu de uma altura que o matou.
-
-  	2:22 Kill: 3 2 10: Isgalamido killed Dono da Bola by MOD_RAILGUN
-  
-  O player "Isgalamido" matou o player Dono da Bola usando a arma Railgun.
-  
-Para cada jogo o parser deve gerar algo como:
-
-    game_1: {
-	    total_kills: 45;
-	    players: ["Dono da bola", "Isgalamido", "Zeh"]
-	    kills: {
-	      "Dono da bola": 5,
-	      "Isgalamido": 18,
-	      "Zeh": 20
-	    }
-	  }
-
-### Observações
-
-1. Quando o `<world>` mata o player ele perde -1 kill.
-2. `<world>` não é um player e não deve aparecer na lista de players e nem no dicionário de kills.
-3. `total_kills` são os kills dos games, isso inclui mortes do `<world>`.
-
-## Task 2
-
-Após construir o parser construa um script que imprima um relatório de cada jogo (simplemente imprimindo o hash) e um ranking geral de kills por jogador.
-
-## Plus
-
-Gerar um relatório de mortes agrupando pelo motivo da morte, por partida.
-
-Causas de morte (retirado do [código fonte](https://github.com/id-Software/Quake-III-Arena/blob/master/code/game/bg_public.h))
-
-	// means of death
-	typedef enum {
-		MOD_UNKNOWN,
-		MOD_SHOTGUN,
-		MOD_GAUNTLET,
-		MOD_MACHINEGUN,
-		MOD_GRENADE,
-		MOD_GRENADE_SPLASH,
-		MOD_ROCKET,
-		MOD_ROCKET_SPLASH,
-		MOD_PLASMA,
-		MOD_PLASMA_SPLASH,
-		MOD_RAILGUN,
-		MOD_LIGHTNING,
-		MOD_BFG,
-		MOD_BFG_SPLASH,
-		MOD_WATER,
-		MOD_SLIME,
-		MOD_LAVA,
-		MOD_CRUSH,
-		MOD_TELEFRAG,
-		MOD_FALLING,
-		MOD_SUICIDE,
-		MOD_TARGET_LASER,
-		MOD_TRIGGER_HURT,
-	#ifdef MISSIONPACK
-		MOD_NAIL,
-		MOD_CHAINGUN,
-		MOD_PROXIMITY_MINE,
-		MOD_KAMIKAZE,
-		MOD_JUICED,
-	#endif
-		MOD_GRAPPLE
-	} meansOfDeath_t;
-
-Exemplo:
-
-	"game-1": {
-		kills_by_means: {
-			"MOD_SHOTGUN": 10,
-			"MOD_RAILGUN": 2,
-			"MOD_GAUNTLET": 1,
-			"XXXX": N
-		}
-	}
-
-# Requisitos
-
-1. Use a linguagem que você tem mais habilidade (dentro das linguagens que priorizamos na empresa, obviamente começando com Ruby, depois Javascript, se tiver Java - pois fazemos Android, talvez Objective-C/Swift (se for iOS).
-2. Faça testes unitários, suite de testes bem organizados.
-3. Use git e tente fazer commits pequenos e bem descritos.
-4. Faça pelo menos um README explicando como fazer o setup, uma explicação da solução proposta, o mínimo de documentação para outro desenvolvedor entender seu código
-5. Siga o que considera boas práticas de programação, coisas que um bom desenvolvedor olhe no seu código e não ache "feio" ou "ruim".
-6. Após concluir o teste faça um zip e mande anexado no email de contato
-
-HAVE FUN :)
+#About
+QuakeLogParser is the result of my work as a candidate for BackEnd Developer job at Codeminer 42
+Feel free to contact me at marcel.c.santos@gmail.com - or by phone: +55(19)981-893-138
